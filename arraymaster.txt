@@ -1,0 +1,259 @@
+//Global Members
+int[] arr;
+int size;
+int index = 0;
+bool generate = false;
+
+Form_Load() {
+	comboBox1.Items.Add("사이즈");
+	for (int i = 1; i <= 50; i++)
+		comboBox1.Items.Add(i);
+	comboBox1.SelectedIndex = 0;
+}
+
+CreateArr() {
+	if (comboBox1.SelectedIndex >= 1 && comboBox1.SelectedIndex <= 50 && !generate)
+	{
+		size = int.Parse(comboBox1.SelectedItem.ToString());
+		arr = new int[size];
+		generate = true;
+		MessageBox.Show("배열이 생성되었습니다!", "배열 마스터 최용수", MessageBoxButtons.OK, MessageBoxIcon.Information);
+		listBoxAdd();
+		comboBox1.Items.Clear();
+		comboBox1.Items.Add("생성 완료");
+		comboBox1.SelectedIndex = 0;
+	}
+	else if (generate)
+	{
+		MessageBox.Show("배열이 이미 생성되었습니다!", "배열 마스터 최용수", MessageBoxButtons.OK, MessageBoxIcon.Information);
+	}
+	else
+	{
+		MessageBox.Show("크기를 선택하세요!", "배열 마스터 최용수", MessageBoxButtons.OK, MessageBoxIcon.Information);
+	}
+}
+
+AddArr() {
+
+	if (generate)
+	{
+		if (textBox1.Text == "")
+		{
+			MessageBox.Show("빈 칸을 입력하세요!", "배열 마스터 최용수", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			textBox1.Focus();
+		}
+		else if (textBox1.Text == "RANDOM")
+		{
+			Random rnd = new Random();
+			for (int i = 0; i < size; i++)
+			{
+				int num;
+				bool same = false;
+				if (checkBox1.Checked)
+				{
+					num = rnd.Next(0, 101);
+					for (int j = 0; j < i; j++)
+					{
+						if (arr[j] == num)
+						{
+							same = true;
+							break;
+						}
+					}
+					if (same)
+					{
+						i--;
+					}
+					else
+					{
+						arr[i] = num;
+						index++;
+					}
+				}
+				else
+				{
+					num = rnd.Next(0, 101);
+					arr[i] = num;
+					index++;
+				}
+			}
+			textBox1.Text = "";
+			textBox1.Focus();
+			listBoxAdd();
+		}
+		else if (size == index)
+		{
+			MessageBox.Show("배열이 꽉 찼습니다!", "배열 마스터 최용수", MessageBoxButtons.OK, MessageBoxIcon.Information);
+		}
+		else
+		{
+			if (checkBox1.Checked)
+			{
+				int num = int.Parse(textBox1.Text);
+				bool same = false;
+				for (int i = 0; i < index; i++)
+				{
+					if (num == arr[i])
+					{
+						same = true;
+						break;
+					}
+				}
+				if (!same)
+				{
+					arr[index] = num;
+					index++;
+					textBox1.Text = "";
+					textBox1.Focus();
+					listBoxAdd();
+				}
+				else
+				{
+					MessageBox.Show("중복된 숫자가 있습니다!", "배열 마스터 최용수", MessageBoxButtons.OK, MessageBoxIcon.Information);
+				}
+			}
+			else
+			{
+				arr[index] = int.Parse(textBox1.Text);
+				index++;
+				textBox1.Text = "";
+				textBox1.Focus();
+				listBoxAdd();
+			}
+		}
+	}
+	else
+	{
+		MessageBox.Show("배열을 생성해주세요!", "배열 마스터 최용수", MessageBoxButtons.OK, MessageBoxIcon.Information);
+		textBox1.Text = "";
+		textBox1.Focus();
+	}
+}
+
+DelArr() {
+	if (generate)
+	{
+		if (textBox1.Text == "")
+		{
+			MessageBox.Show("빈 칸을 입력하세요!", "배열 마스터 최용수", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			textBox1.Focus();
+		}
+		else
+		{
+			bool del = false;
+			int num = int.Parse(textBox1.Text);
+			for (int i = 0; i < index; i++)
+			{
+				if (num == arr[i])
+				{
+					for (int j = i; j < index - 1; j++)
+					{
+						arr[j] = arr[j + 1];
+					}
+					index--;
+					del = true;
+					break;
+				}
+			}
+			if (!del)
+			{
+				MessageBox.Show("삭제할 숫자를 찾지 못했습니다!", "배열 마스터 최용수", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			}
+			else
+			{
+				textBox1.Text = "";
+				textBox1.Focus();
+				listBoxAdd();
+				MessageBox.Show("삭제되었습니다!", "배열 마스터 최용수", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			}
+		}
+	}
+	else
+	{
+		MessageBox.Show("배열을 생성해주세요!", "배열 마스터 최용수", MessageBoxButtons.OK, MessageBoxIcon.Information);
+		textBox1.Focus();
+	}
+}
+
+listBoxAdd() {
+	listBox1.Items.Clear();
+	listBox1.Items.Add("배열의 크기:" + size);
+	listBox1.Items.Add("-----------------");
+	for (int i = 0; i < index; i++)
+	{
+		listBox1.Items.Add("arr[" + i + "]:" + arr[i].ToString());
+	}
+}
+}
+
+SortArr() {
+	if (generate)
+	{
+		if (radioButton1.Checked || radioButton2.Checked)
+		{
+			if (index == 0)
+			{
+				MessageBox.Show("정렬할 배열들이 없습니다!", "배열 마스터 최용수", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			}
+			else
+			{
+				int temp;
+				for (int i = 0; i < index - 1; i++)
+				{
+					for (int j = 0; j < index - 1; j++)
+					{
+						if (radioButton1.Checked)
+						{
+							if (arr[j] > arr[j + 1])
+							{
+								temp = arr[j + 1];
+								arr[j + 1] = arr[j];
+								arr[j] = temp;
+							}
+						}
+						else if (radioButton2.Checked)
+						{
+							if (arr[j] < arr[j + 1])
+							{
+								temp = arr[j + 1];
+								arr[j + 1] = arr[j];
+								arr[j] = temp;
+							}
+						}
+					}
+				}
+				listBoxAdd();
+			}
+		}
+		else
+		{
+			MessageBox.Show("정렬 방식을 선택해주세요!", "배열 마스터 최용수", MessageBoxButtons.OK, MessageBoxIcon.Information);
+		}
+	}
+	else
+	{
+		MessageBox.Show("배열을 생성해주세요!", "배열 마스터 최용수", MessageBoxButtons.OK, MessageBoxIcon.Information);
+		textBox1.Text = "";
+		textBox1.Focus();
+	}
+}
+
+Reset() {
+	if (generate)
+	{
+		arr = null;
+		size = 0;
+		index = 0;
+		generate = false;
+		comboBox1.SelectedIndex = 0;
+		radioButton1.Checked = false;
+		radioButton2.Checked = false;
+		checkBox1.Checked = false;
+		listBox1.Items.Clear();
+		comboBox1.Items.Clear();
+		comboBox1.Items.Add("사이즈");
+		for (int i = 1; i <= 50; i++)
+			comboBox1.Items.Add(i);
+		comboBox1.SelectedIndex = 0;
+	}
+}
