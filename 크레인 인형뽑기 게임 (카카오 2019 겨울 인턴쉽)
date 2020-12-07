@@ -1,0 +1,28 @@
+import java.util.ArrayList;
+
+public class Solution {
+
+	public int CraneMachine (int[][] board, int[] moves) {
+		ArrayList<Integer> busket = new ArrayList<>();
+		int next, dolls, bomb = 0;
+		for (int i = 0; i < moves.length; i++) {
+			next = moves[i] - 1;
+			for (int j = 0; j < board.length; j++) {
+				dolls = board[j][next];
+				if (dolls != 0) {
+					busket.add(dolls);
+					board[j][next] = 0;
+					if (busket.size() > 1) {
+						if (busket.get(busket.size() - 2) == busket.get(busket.size() - 1)) {
+							busket.remove(busket.size() - 1);
+							busket.remove(busket.size() - 1);
+							bomb += 2;
+						}
+					}
+					break;
+				}
+			}
+		}
+		return bomb;
+	}
+}
