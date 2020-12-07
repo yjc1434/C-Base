@@ -1,0 +1,20 @@
+//문제 : https://programmers.co.kr/learn/courses/30/lessons/12916
+
+class Solution {
+	boolean solution(String s) {
+		boolean answer = true;
+		String lower = s.toLowerCase();
+		int p = 0, y = 0;
+		char[] ch = lower.toCharArray();
+		for (int i = 0; i < ch.length; i++) {
+			if (ch[i] == 'p')
+				p++;
+			else if (ch[i] == 'y')
+				y++;
+		}
+		if (p != y) {
+			answer = false;
+		}
+		return answer;
+	}
+}
